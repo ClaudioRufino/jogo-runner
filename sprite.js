@@ -10,7 +10,7 @@ function Sprite(bola) {
 Sprite.prototype = {
 	desenhaBotaoComecar: function () {
 		var img = new Image();
-		img.src = "tube1.png";
+		img.src = "imagens/tube1.png";
 		ctx.drawImage(img, this.x, this.y, this.largura, this.altura);
 	}
 	,
