@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 
-	<title>Meu jogo</title>
+	<title>Endless Runner</title>
 	<meta charset="utf-8">
 	<script type="text/javascript" src="artista.js"></script>
 	<script type="text/javascript" src="bola.js"></script>
@@ -16,171 +15,154 @@
 	<script type="text/javascript" src="som.js"></script>
 
 	<style>
-		body,
-		html {
+		body{
 			background-color: #282828;
-			margin: 0;
-			padding: 0;
-			height: 100vh;
 		}
-
-		#container {
-			width: 100%;
-			background-color: rgb(32, 30, 30);
-			height: 100%;
-			display: flex;
-			align-items: center;
-		}
-
-		canvas {
-			border: 4px solid #fff;
-			display: flex;
+		canvas{
+			border: 4px solid white;
+			margin-top: 150px;
 		}
 	</style>
 </head>
-
 <body>
+	<canvas id="canvas" width="800" height="480"></canvas>
+	
+<script>
+	
+	var canvas = document.getElementById("canvas"), ctx = canvas.getContext("2d");
+	var LARGURA = canvas.width, ALTURA = canvas.height, controlo = true, estado = 1;
 
-	<div id="container">
-		<canvas id="canvas" width="800" height="480"></canvas>
-	</div>
+	var fInicial, btnComeca;
 
-	<script>
-
-		var canvas = document.getElementById("canvas"), ctx = canvas.getContext("2d");
-		var LARGURA = canvas.width, ALTURA = canvas.height, controlo = true, estado = 1;
-
-		var fInicial, btnComeca;
-
-		var artista = new Artista();
-		var bola = new Bola();
-		var fundoCima = new Fundo();
-		var fundoBaixo = new Fundo();
-		var colisao = new Colisao(artista, bola);
-		var rei = new Rei();
-		var circulo = new Bola();
-		var mgsPerdeu = new Sprite(bola);
-		var totalPontos = new Sprite(bola);
-		var totPontos = new Sprite(bola);
-		var pontuacao = new Sprite(bola);
-		var botaoComeca = new Sprite(bola);
-		var som = new Som();
+	var artista = new Artista();
+	var bola = new Bola();
+	var fundoCima = new Fundo();
+	var fundoBaixo = new Fundo();
+	var colisao = new Colisao(artista, bola);	
+	var rei = new Rei();
+	var circulo = new Bola();
+	var mgsPerdeu = new Sprite(bola);
+	var totalPontos = new Sprite(bola);
+	var totPontos = new Sprite(bola); 
+	var pontuacao = new Sprite(bola);
+	var botaoComeca = new Sprite(bola);
+	var som = new  Som();
 
 
-		jogo = new Carregamento(artista, bola, fundoCima, fundoBaixo, colisao, rei, circulo, mgsPerdeu,
-			totalPontos, totPontos, pontuacao, botaoComeca);
+	jogo = new Carregamento(artista,bola,fundoCima,fundoBaixo, colisao, rei, circulo, mgsPerdeu, 
+	totalPontos, totPontos, pontuacao, botaoComeca);
 
-		jogo.carrega();
-		jogo.configura();
-		cenario();
 
-		botaoComeca.desenhaBotaoComecar();
-		canvas.addEventListener("mouseup", function () {
-			if (controlo == true) {
-				controlo = false;
-				inicio();
-				som.fundo();
-			}
-			else {
-				if (estado == 1) {
-					artista.saltar();
-					som.salto();
+	jogo.carrega();
+	jogo.configura();
+	cenario();
+
+	botaoComeca.desenhaBotaoComecar();
+	
+	canvas.addEventListener("mouseup", function(){
+		if(controlo == true){
+			controlo = false;
+			inicio();
+			som.fundo();
+		}
+		else{
+			if(estado == 1){
+				artista.saltar();
+				som.salto();
 				}
-			}
-		});
+		}	
+	});
 
-		function inicio() {
+	function inicio(){  
 
-			if (estado == 1) {
-				limpaTela();
-				cenario();
-				atualiza();
-				desenha();
-				requestAnimationFrame(inicio);
-			}
-			else rebenta();
+		if(estado == 1){
+
+			limpaTela();
+
+			cenario();
+
+			atualiza();
+
+			desenha();
+
+			requestAnimationFrame(inicio);
 		}
+		else rebenta();
+	}
 
-		function limpaTela() {
-			ctx.clearRect(0, 0, LARGURA, ALTURA);
+function limpaTela(){
+	ctx.clearRect(0, 0, LARGURA, ALTURA);
+}
+
+function cenario(){
+	canvas.style.position="relative";
+	canvas.style.left = (window.innerWidth - LARGURA) / 2 + "px";
+	canvas.style.bottom = (window.innerHeight - ALTURA) / 2 + "px";
+
+	fundoCima.desenha();
+	fundoBaixo.desenha();
+}
+
+function atualiza(){
+
+	if(colisao.ocorreu()){
+		mgsPerdeu.desenhaLetra();
+		totalPontos.desenhaLetra();
+		totPontos.desenhaTotal();
+		estado = 0;	
+		musicaFundo.src = "Sounds/I Love You Baby.wav";
+		musicaFundo.loop = false;
+		musicaFundo.play();
+	}
+	else{
+
+		if(fundoCima.x < -800)
+			fundoCima.x = 0;
+					
+		if(fundoBaixo.x < 0)
+		   fundoBaixo.x = 800;
+			
+		fundoCima.atualiza();
+		fundoBaixo.atualiza();
+
+		rei.correr();
+		artista.correr();
+		artista.atualizar();
+		bola.atualizar();
 		}
+}
 
-		function cenario() {
-			canvas.style.position = "relative";
-			canvas.style.left = (window.outerWidth - LARGURA) / 2 + "px";
+   function desenha(){
 
-			fundoCima.desenha();
-			fundoBaixo.desenha();
-		}
-
-		function atualiza() {
-
-			if (colisao.ocorreu()) {
-
-				mgsPerdeu.desenhaLetra();
-				totalPontos.desenhaLetra();
-				totPontos.desenhaTotal();
-				estado = 0;
-				musicaFundo.src = "Sounds/I Love You Baby.wav";
-				musicaFundo.loop = false;
-				musicaFundo.play();
-			}
-			else {
-
-				if (fundoCima.x < -800)
-					fundoCima.x = 0;
-
-				if (fundoBaixo.x < 0)
-					fundoBaixo.x = 800;
-
-				fundoCima.atualiza();
-				fundoBaixo.atualiza();
-
-				rei.correr();
-				artista.correr();
-				artista.atualizar();
-				bola.atualizar();
-			}
-		}
-
-		function desenha() {
-
-			if (!colisao.ocorreu()) {
-
-				rei.desenhar();
-				artista.desenhar();
-				bola.desenhar();
-				circulo.desenhar();
-				pontuacao.desenhaPontuacao();
-			}
+		if(!colisao.ocorreu()){
+			rei.desenhar();
 			artista.desenhar();
 			bola.desenhar();
+			circulo.desenhar();
+			pontuacao.desenhaPontuacao();
 		}
+		artista.desenhar();
+		bola.desenhar();
+	}
 
-		var b = 0;
-		var anterior = new Date().getTime();
-		function rebenta() {
-			if (b == 0) {
-
-				var agora = new Date().getTime();
-				var percorrido = agora - anterior;
-
-				if (bola.raio < 90) {
-					bola.raio++;
-					bola.posY--;
-				}
-				else {
-					bola.raio = 0;
-					b = 2;
-				}
-
+	b = 0; 
+   
+	function rebenta(){
+		if(b == 0){
+			if(bola.raio < 130){
+				bola.raio++;
+				bola.posY--;
 				bola.desenhar();
 				requestAnimationFrame(rebenta);
 			}
+			else{
+				b = 1;
+			} 
+			
 		}
+	}
 
-	</script>
+</script>
 
 </body>
-
 </html>

@@ -1,4 +1,4 @@
-function Carregamento(artista, bola, fundoCima, fundoBaixo, colisao, rei, circulo, mgsPerdeu, totalPontos, totPontos, pontuacao, botaoComeca) {
+function Carregamento(artista,bola,fundoCima,fundoBaixo, colisao, rei, circulo, mgsPerdeu, totalPontos, totPontos, pontuacao, botaoComeca){
 	this.artista = artista;
 	this.bola = bola;
 	this.fundoCima = fundoCima;
@@ -12,26 +12,26 @@ function Carregamento(artista, bola, fundoCima, fundoBaixo, colisao, rei, circul
 	this.pontuacao = pontuacao;
 	this.botaoComeca = botaoComeca;
 }
-Carregamento.prototype = {
+Carregamento.prototype={
 
-	carrega: function () {
+	carrega: function(){
 
-		fInicial = new Image();
-		fInicial.src = "imagens/fundo7.jpg";
+		 fInicial = new Image();
+	     fInicial.src = "fundo7.jpg";
 
-		fInicial.onload = function () {
+		 fInicial.onload=function(){
 			ctx.drawImage(fInicial, 0, 0, 800, 480);
-		};
+		 };
 
-		btnComeca = new Image();
-		btnComeca.src = "imagens/tube1.png";
-		btnComeca.onload = function () {
-			ctx.drawImage(btnComeca, 320, 138, 128, 128);
+	     btnComeca = new Image();
+		 btnComeca.src = "tube1.png";
+		 btnComeca.onload = function(){
+		 ctx.drawImage(btnComeca, 320, 138, 128, 128);
 		}
 	}
 	,
-	configura: function () {
-		this.bola.posX = 900;
+	configura: function(){
+		this.bola.posX = 900; 
 		this.bola.posY = 396;
 
 		this.fundoCima.largura = 800;
@@ -47,22 +47,22 @@ Carregamento.prototype = {
 		this.circulo.numCor = 2;
 
 		//Mostra a mensagem dizendo que perdeu
-		this.mgsPerdeu.x = 323;
+		this.mgsPerdeu.x = 360;
 		this.mgsPerdeu.y = 177;
-		this.mgsPerdeu.size = 25;
-		this.mgsPerdeu.mensagem = "Perdeu";
+		this.mgsPerdeu.size = 20;
+		this.mgsPerdeu.mensagem = "PERDEU";
 
-		// Mostra a mensagem dizendo: Total de pontuação
-		this.totalPontos.x = 220;
+		 // Mostra a mensagem dizendo: Total de pontuação
+		this.totalPontos.x = 280;
 		this.totalPontos.y = 215;
 		this.totalPontos.size = 15;
-		this.totalPontos.mensagem = "Total de pontuação:"
+		this.totalPontos.mensagem = "Total de Pontuação:"
 
 		// A pontuação do placar no final do jogo
-		this.totPontos.x = 526;
+		this.totPontos.x = 590;
 		this.totPontos.y = 217;
 
-
+	
 		this.pontuacao.x = 680;
 		this.pontuacao.y = 90;
 
